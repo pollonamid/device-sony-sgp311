@@ -12,8 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TARGET_PREBUILT_KERNEL=kernel.windy
-$(call inherit-product, device/sony/sgp321/full_sgp321.mk)
+$(call inherit-product, device/sony/lagan/device_tablet.mk)
+$(call inherit-product, vendor/sony/yuga_blobs/yuga_blobs.mk)
 
 PRODUCT_NAME := full_sgp311
+PRODUCT_DEVICE := sgp311
+PRODUCT_BRAND := Sony
 PRODUCT_MODEL := Full Android on SGP311
+PRODUCT_MANUFACTURER := Sony
+PRODUCT_LOCALES += hdpi
+
+TARGET_PREBUILT_KERNEL ?= kernel
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/$(TARGET_PREBUILT_KERNEL):kernel
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/rootdir/logo.rle:root/logo.rle \
+    $(LOCAL_PATH)/rootdir/system/etc/flashled_calc_parameters.cfg:system/etc/flashled_calc_parameters.cfg \
+    $(LOCAL_PATH)/rootdir/system/etc/sensors.conf:system/etc/sensors.conf \
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.sf.lcd_density=240 \
+    fw.max_users=8 \
+
+PRODUCT_PACKAGE_OVERLAYS += device/sony/sgp311/overlay
+
+SOMC_CFG_SENSORS_LIGHT_LM3533 := yes
+SOMC_CFG_SENSORS_LIGHT_MAXRANGE := 1000
+SOMC_CFG_SENSORS_LIGHT_LM3533_PATH := /sys/bus/i2c/devices/0-0036
+
+SOMC_CFG_SENSORS_PROXIMITY_APDS9702 := yes
+
+SOMC_CFG_SENSORS_ACCEL_BMA250_INPUT := yes
+
+$(call inherit-product, frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
